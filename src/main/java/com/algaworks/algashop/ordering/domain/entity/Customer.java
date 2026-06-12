@@ -1,9 +1,5 @@
 package com.algaworks.algashop.ordering.domain.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -81,6 +77,51 @@ public class Customer {
 
     private void setId(UUID id) {
         this.id = id;
+    }
+
+
+    public UUID id() {
+        return id;
+    }
+
+    public String fullName() {
+        return fullName;
+    }
+
+    public LocalDate birthDate() {
+        return birthDate;
+    }
+
+    public String email() {
+        return email;
+    }
+
+    public String phone() {
+        return phone;
+    }
+
+    public String document() {
+        return document;
+    }
+
+    public Boolean isPromotionNotificationsAllowed() {
+        return promotionNotificationsAllowed;
+    }
+
+    public Boolean isArchived() {
+        return archived;
+    }
+
+    public OffsetDateTime registeredAt() {
+        return registeredAt;
+    }
+
+    public OffsetDateTime archivedAt() {
+        return archivedAt;
+    }
+
+    public Integer loyaltyPoints() {
+        return loyaltyPoints;
     }
 
     private void setFullName(String fullName) {
