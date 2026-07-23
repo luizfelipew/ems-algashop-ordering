@@ -3,6 +3,7 @@ package com.algaworks.algashop.ordering.domain.entity;
 
 import com.algaworks.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.algaworks.algashop.ordering.domain.utility.IdGenerator;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -94,15 +95,55 @@ class CustomerTest {
                 .isThrownBy(customer::archive);
 
         assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(()-> customer.changeEmail("email@email.com"));
+                .isThrownBy(() -> customer.changeEmail("email@email.com"));
 
         assertThatExceptionOfType(CustomerArchivedException.class)
-                .isThrownBy(()-> customer.changePhone("123-123-1111"));
+                .isThrownBy(() -> customer.changePhone("123-123-1111"));
 
         assertThatExceptionOfType(CustomerArchivedException.class)
                 .isThrownBy(customer::enablePromotionNotifications);
 
         assertThatExceptionOfType(CustomerArchivedException.class)
                 .isThrownBy(customer::disablePromotionNotifications);
+    }
+
+    @Test
+    void given_brandNewCustomer_whenAddLoyaltyPoints_shouldSumPoints() {
+        var customer = new Customer(
+                IdGenerator.generateTimeBasedUUID(),
+                "Jhon Doe",
+                LocalDate.of(1991, 7, 5),
+                "john.doe@email.com",
+                "478-256-2504",
+                "255-08-0578",
+                false,
+                OffsetDateTime.now()
+        );
+
+        customer.addLoyaltyPoints(10);
+        customer.addLoyaltyPoints(20);
+
+        Assertions.assertThat(customer.loyaltyPoints())
+                .isEqualTo(30);
+    }
+
+    @Test
+    void given_brandNewCustomer_whenAddInvalidLoyaltyPoints_shouldGenerateException() {
+        var customer = new Customer(
+                IdGenerator.generateTimeBasedUUID(),
+                "Jhon Doe",
+                LocalDate.of(1991, 7, 5),
+                "john.doe@email.com",
+                "478-256-2504",
+                "255-08-0578",
+                false,
+                OffsetDateTime.now()
+        );
+
+        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> customer.addLoyaltyPoints(0));
+
+        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> customer.addLoyaltyPoints(-10));
     }
 }

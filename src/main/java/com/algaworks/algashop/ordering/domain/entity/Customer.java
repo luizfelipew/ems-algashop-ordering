@@ -55,11 +55,15 @@ public class Customer {
         this.setLoyaltyPoints(loyaltyPoints);
     }
 
-    public void addLoyaltyPoints(Integer points) {
-
+    public void addLoyaltyPoints(Integer loyaltyPointsAdded) {
+        verifyIfChangeable();
+        if (loyaltyPointsAdded <= 0) {
+            throw new IllegalArgumentException();
+        }
+        this.setLoyaltyPoints(this.loyaltyPoints() + loyaltyPointsAdded);
     }
 
-    public void archive(){
+    public void archive() {
         verifyIfChangeable();
         this.setArchived(true);
         this.setArchivedAt(OffsetDateTime.now());
@@ -71,27 +75,27 @@ public class Customer {
         this.setPromotionNotificationsAllowed(false);
     }
 
-    public void enablePromotionNotifications(){
+    public void enablePromotionNotifications() {
         verifyIfChangeable();
         this.setPromotionNotificationsAllowed(true);
     }
 
-    public void disablePromotionNotifications(){
+    public void disablePromotionNotifications() {
         verifyIfChangeable();
         this.setPromotionNotificationsAllowed(false);
     }
 
-    public void changeName(String fullName){
+    public void changeName(String fullName) {
         verifyIfChangeable();
         this.setFullName(fullName);
     }
 
-    public void changeEmail(String email){
+    public void changeEmail(String email) {
         verifyIfChangeable();
         this.setEmail(email);
     }
 
-    public void changePhone(String phone){
+    public void changePhone(String phone) {
         verifyIfChangeable();
         this.setPhone(phone);
     }
@@ -149,18 +153,18 @@ public class Customer {
 
     private void setFullName(String fullName) {
         Objects.requireNonNull(fullName, VALIDATION_ERROR_FULLNAME_IS_NULL);
-        if (fullName.isBlank()){
+        if (fullName.isBlank()) {
             throw new IllegalArgumentException(VALIDATION_ERROR_FULLNAME_IS_BLANK);
         }
         this.fullName = fullName;
     }
 
     private void setBirthDate(LocalDate birthDate) {
-        if (Objects.isNull(birthDate)){
+        if (Objects.isNull(birthDate)) {
             this.birthDate = null;
             return;
         }
-        if (birthDate.isAfter(LocalDate.now())){
+        if (birthDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException(VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST);
         }
         this.birthDate = birthDate;
@@ -202,11 +206,14 @@ public class Customer {
 
     private void setLoyaltyPoints(Integer loyaltyPoints) {
         Objects.requireNonNull(loyaltyPoints);
+        if (loyaltyPoints < 0) {
+            throw new IllegalArgumentException();
+        }
         this.loyaltyPoints = loyaltyPoints;
     }
 
     private void verifyIfChangeable() {
-        if (Boolean.TRUE.equals(this.isArchived())){
+        if (Boolean.TRUE.equals(this.isArchived())) {
             throw new CustomerArchivedException();
         }
     }
